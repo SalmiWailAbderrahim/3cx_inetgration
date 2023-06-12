@@ -1,0 +1,55 @@
+<!-- child.html -->
+{% extends 'dashboard.html' %}
+{% block session_data %}
+    <script>
+            function update() {
+            // Fetch the updated session data and replace the placeholder
+                fetch('/update_session_data/')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                   // document.getElementById('session-data').innerHTML = data.session_data;
+                $('.chart:eq(0)').data('easyPieChart').update(data.session_data.DiskUsage);
+                $('.chart:eq(0) .percent').text(data.session_data.DiskUsage);
+                $('.chart:eq(1)').data('easyPieChart').update(parseInt(data.session_data.MemoryUsage)+5);
+                $('.chart:eq(1) .percent').text(parseInt(data.session_data.MemoryUsage)+5);
+                $('.chart:eq(2)').data('easyPieChart').update(data.session_data.CpuUsage);
+                $('.chart:eq(2) .percent').text(data.session_data.CpuUsage);
+                
+                var newData = [
+                {x:data.session_data.CpuUsageHistory[0][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[0][1])},
+                {x:data.session_data.CpuUsageHistory[1][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[1][1])},
+                {x:data.session_data.CpuUsageHistory[2][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[2][1])},
+                {x:data.session_data.CpuUsageHistory[3][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[3][1])},
+                {x:data.session_data.CpuUsageHistory[4][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[4][1])},
+                {x:data.session_data.CpuUsageHistory[5][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[5][1])},
+                {x:data.session_data.CpuUsageHistory[6][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[6][1])},
+                {x:data.session_data.CpuUsageHistory[7][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[7][1])},
+                {x:data.session_data.CpuUsageHistory[8][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[8][1])},
+                {x:data.session_data.CpuUsageHistory[9][0].slice(11, -9), y:Math.floor(data.session_data.CpuUsageHistory[9][1])}
+                ];
+                chart.data.datasets[0].data = newData;
+                chart.update();
+                });
+              }
+{% comment %} 
+              function updategraph() {
+                // Fetch the updated session data and replace the placeholder
+                    fetch('/update_session_data/')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                       // document.getElementById('session-data').innerHTML = data.session_data;
+                   
+                      
+                    });
+                  } {% endcomment %}
+
+              $(document).ready(function() {
+                run(_chart);
+                chartInterval = setInterval(update, 3000);
+                //chartInterval = setInterval(updategraph, 3000);
+
+              });
+    </script>
+{% endblock %}

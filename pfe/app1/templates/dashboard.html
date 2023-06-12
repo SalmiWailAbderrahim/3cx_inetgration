@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% load tz %}
+    {% block sidebar %}
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+   
+        <div class="container">
+        <div class="main--container"> 
+            <div class="b-skills">
+                        <div class="col1">
+                            <div class="heder"><h3>System Status</h3></div>
+                            <br><br><br>
+                            <div class="graph"><canvas id="myChart"></canvas></div>
+                            <br><br>
+                            <div class="row">
+                                <div class="ele">
+                                    <div class="skill-item -block">
+                                        <div class="chart-container">
+                                            <div class="chart " data-percent="{{data.DiskUsage}}" data-bar-color="#ff4800">
+                                                <span class="percent" data-after="%">{{data.DiskUsage}}</span>
+                                            </div>
+                                        </div>
+                                        <p>Disk</p>
+                                    </div>
+                                </div>
+                                <div class="ele">
+                                    <div class="skill-item -block">
+                                        <div class="chart-container">
+                                            {% load custom_filters %}
+                                            <div class="chart " data-percent="{{data.MemoryUsage|add_five}}" data-bar-color="#ff4800">
+                                                <span class="percent" data-after="%">{{data.MemoryUsage|add_five}}</span>
+                                            </div>
+                                        </div>
+                                        <p>Memory</p>
+                                    </div>
+                                </div>
+                                <div class="ele">
+                                    <div class="skill-item -block">
+                                        <div class="chart-container">
+                                            <div class="chart " id="CPU" data-percent="{{data.CpuUsage}}" data-bar-color="#ff4800">
+                                                <span class="percent" data-after="%">{{data.CpuUsage}}</span>
+                                            </div>
+                                        </div>
+                                        <p>CPU</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="col">
+                            <div class="heder"><h3>PBX Status</h3></div>
+                            
+                            <table id="myTable">
+                                    <tr>
+                                      <td class="left">Trunks Up</td>
+                                      <td class="right"><span class="text">{{data.TrunksRegistered}}/{{data.TrunksTotal}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Extensions Up</td>
+                                      <td class="right"><span class="text">{{data.ExtensionsRegistered}}/{{data.ExtensionsTotal}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Number of calls in use</td>
+                                        <td class="right"><span class="text">{{data.CallsActive}}/{{data.MaxSimCalls}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Blacklisted Ips</td>
+                                        <td class="right"><span class="text">{{data.BlacklistedIpCount}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Call history</td>
+                                        <td class="right"><span class="text">Purge {{data.CallHistoryCount}} messages</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Chat logs {% if data1.isChatLogEnabled %}<span class="active">Enabled</span>{% endif %} </td>
+                                        <td class="right">
+                                                            {% if data1.isChatLogEnabled %}
+                                                            <span class="text">Purge {{data.ChatMessagesCount}} messages</span>
+                                                            {% else %}
+                                                                <span class="disactive">Disabled</span>
+                                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Audit logs</td>
+                                        <td class="right">{% if data1.IsAuditLogEnabled %}<span class="active">Enabled</span>{% else %}<span class="disactive">Disabled</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Automatic Backups</td>
+                                        <td class="right">{% if data1.BackupScheduled %}<span class="active">Enabled</span>{% else %}<span class="off">OFF</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left">Recording</td>
+                                        <td class="right"><span class="text">{{data.RecordingState}}</span></td>
+                                    </tr>
+                            </table>
+                            <table class="tab">
+                            <tr>
+                                <td>{% if data2.Health.Firewall %}  <div class="active"><i class="ri-checkbox-circle-line"></i></div>
+                                    {% else %} <span class="off"><i class="ri-close-circle-line"></i></span>{% endif %}
+                                    Firewall </td>
+                                <td>{% if data2.Health.Trunks %}  <div class="active"><i class="ri-checkbox-circle-line"></i></div>
+                                    {% else %} <span class="off"><i class="ri-close-circle-line"></i></span>{% endif %}
+                                    Trunks</td>
+                                <td>{% if data2.Health.Phones %}  <div class="active"><i class="ri-checkbox-circle-line"></i></div>
+                                    {% else %} <span class="off"><i class="ri-close-circle-line"></i></span>{% endif %}
+                                    Phones</td>
+                            </tr>
+                            <tr>
+                                <td>{% if data1.HasNotRunningServices %}  <span class="off"><i class="ri-close-circle-line"></i></span>
+                                    {% else %} <div class="active"><i class="ri-checkbox-circle-line"></i></div>{% endif %}
+                                    Services</td>
+                                <td><i class="ri-computer-line"></i>Terminal</td>
+                                <td>{% if data.ExtensionsTotal %}  <div class="active"><i class="ri-checkbox-circle-line"></i></div>
+                                    {% else %} <span class="off"><i class="ri-close-circle-line"></i></span>{% endif %}
+                                    System</td>
+                            </tr>
+                            </table>
+                        </div>
+                        <div class="col">
+                            <div class="heder"><h3>Information </h3></div>
+                        
+                        <table>
+                            <tr>
+                              <td class="left">License</td>
+                              <td class="right"><span class="text1">{{data.LicenseKey}}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Product</td>
+                              <td class="right"><span class="text1">
+                                {% if data1.isProfessional %}
+                                <span class="text1">Professional Annual</span>
+                                {% else %}
+                                    <span class="text1">Normal Annual</span>
+                                {% endif %}
+                              </span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Sim Calls</td>
+                                <td class="right"><span class="text1">{{data.MaxSimCalls}}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Meeting Seats</td>
+                                <td class="right"><span class="text1">{{data.MaxSimMeetingParticipants}}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Expiry date</td>
+                                <td class="right">{% if data.ExpirationDate %}<span class="active">active</span>  <span class="text1">
+                                    {{ data.ExpirationDate}}
+                                </span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td class="left">Version</td>
+                                <td class="right"><span class="text1">{{data.Version}}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">My partner </td>
+                                <td class="right">
+                                <span class="text1">{{data1.name|upper}}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="left">FQDN</td>
+                                <td class="right"><span class="text1">{{data.FQDN}}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Ipv4</td>
+                                <td class="right">{% if data.IpV4 %}<span class="text1">{{data.IpV4}}</span>{% else %}<span class="text">None</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td class="left">Ipv6</td>
+                                <td class="right">{% if data.IpV6%}<span class="text1">{{data.IpV6}}</span>{% else %}<span class="text">None</span>{% endif %}</span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="left">Outbound Rules</td>
+                                <td class="right">
+                                    {% if data.OutboundRules == 0 %}
+                                    <span class="text">None</span>
+                                    {% else %}
+                                        <span class="text1">{{data.OutboundRules}}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                    </table>
+                        </div>
+                </div>
+            
+  
+        </div>
+    </section>
+
+      </body>     
+    <script src="{% static 'js/jquery-2.2.4.min.js'%}"></script>
+    <script src="{% static 'js/jquery.appear.min.js'%}"></script>
+    <script src="{% static 'js/jquery.easypiechart.min.js'%}"></script> 
+ <script>
+    'use strict';
+
+var $window = $(window);
+
+function run()
+{
+	var fName = arguments[0],
+		aArgs = Array.prototype.slice.call(arguments, 1);
+	try {
+		fName.apply(window, aArgs);
+	} catch(err) {
+		 
+	}
+};
+/* chart
+================================================== */
+function _chart ()
+{
+	$('.b-skills').appear(function() {
+		setTimeout(function() {
+			$('.chart').easyPieChart({
+				easing: 'easeOutElastic',
+				delay: 0,
+				barColor: '#369670',
+				trackColor: '#fff',
+				scaleColor: false,
+				lineWidth: 21,
+				trackWidth: 21,
+				size: 250,
+				lineCap: 'round',
+				onStep: function(from, to, percent) {
+					this.el.children[0].innerHTML = Math.round(percent);
+				}
+			});
+		}, 150);
+	});
+};
+$(document).ready(function() {
+	run(_chart);
+});
+    </script>
+            <script>
+                
+                var xyValues = [
+                {x:"{{data.CpuUsageHistory.0.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.0.1}}"},
+                {x:"{{data.CpuUsageHistory.1.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.1.1}}"},
+                {x:"{{data.CpuUsageHistory.2.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.2.1}}"},
+                {x:"{{data.CpuUsageHistory.3.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.3.1}}"},
+                {x:"{{data.CpuUsageHistory.4.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.4.1}}"},
+                {x:"{{data.CpuUsageHistory.5.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.5.1}}"},
+                {x:"{{data.CpuUsageHistory.6.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.6.1}}"},
+                {x:"{{data.CpuUsageHistory.7.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.7.1}}"},
+                {x:"{{data.CpuUsageHistory.8.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.8.1}}"},
+                {x:"{{data.CpuUsageHistory.9.0|slice:'11:-9'}}", y:"{{data.CpuUsageHistory.9.1}}"}
+              ];
+              
+              var chart = new Chart("myChart", {
+                type: "scatter",
+                data: {
+                  datasets: [{
+                    pointRadius: 6,
+                    pointBackgroundColor: "white",
+                    showLine: true,
+                    borderColor: "red",
+                    borderWidth: 3,
+                    data: xyValues
+                  }]
+                },
+                options: {
+                    scales: {
+                      x: {
+                        type: "category",
+                        position: "bottom",
+                      },
+                      y: {
+                        min: 0,
+                        max: 100
+                    },
+                    },
+                    plugins: {
+                      legend: {
+                        display: false, // Hide the legend
+                      },
+                    },
+                  },
+                });
+            </script>
+            <script>
+                var elements = document.querySelectorAll('.hrf');       
+                // Change the class of the last element to "active"
+                  if (elements.length > 0) {
+                  var lastElement = elements[elements.length - 7];
+                  lastElement.classList.add('active');
+                }
+              </script>
+            {% block session_data %}{% endblock %}
+
+        
+</html>
+{% endblock %}

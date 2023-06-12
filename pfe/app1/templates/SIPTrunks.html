@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block sidebar %}
+   
+        <div class="container">
+            <div class="panel" >SIP Trunks</div>
+        <div class="main--container"> 
+             
+            <div class="table">
+            <div class="panel" ><h2>SIP Trunks</h2></div>
+            <input type="text" id="searchBar" placeholder="Search...">
+            <table id="myTable">
+              <tr>
+                <th></th>
+                
+                <th>Name</th>
+                <th>Host</th>
+                <th>Type</th>
+                <th>SimCalls</th>
+                <th>Main Trunk No</th>
+                <th>Register Sent</th>
+                <th>Register Ok</th>
+                <th>Register Last Failed</th>
+
+                <th></th>
+              </tr>
+            {% for i in data.list %}
+              <tr>
+                
+                <td>{% if i.IsRegistered and not i.ConfigurationIssue %} &nbsp; <div class="active"><i class="ri-checkbox-blank-circle-line"></i></div> {% else %} &nbsp; <span class="off"><i class="ri-checkbox-blank-circle-line"></i></span>{%endif%}</td>
+                <td>{{i.Name}}</td>
+                <td>{% if i.Host %}{{i.Host}} {% else %} -- {%endif%} </td>
+                <td>{% if i.Type %}{{i.Type}} {% else %} -- {%endif%}</td>
+                <td>{% if i.SimCalls %}{{i.SimCalls}} {% else %} -- {%endif%}</td>
+                <td>{% if i.ExternalNumber %}{{i.ExternalNumber}} {% else %} -- {%endif%}</td>
+                <td>{% if i.RegisterSentTime %}{{i.RegisterSentTime}} {% else %} -- {%endif%}</td>
+                <td>{% if i.RegisterOkTime %}{{i.RegisterOkTime}} {% else %} -- {%endif%}</td>
+                <td>{% if i.RegisterFailedTime %}{{i.RegisterFailedTime}} {% else %} -- {%endif%}</td>
+                <td>
+                  {% if i.CanBeDeleted %}
+                  <a href="#" onclick="confirmDelete({{i.Id}})">
+                  <span class="icon"><i class="ri-close-circle-line"></i></span>
+                  </a>
+                  {% else %} 
+                  <a href="#" onclick="cantdelete()">
+                    <span class="text1"><i class="ri-close-circle-line"></i></span>
+                    </a>
+                  {%endif%}
+                </td>
+              </tr>
+            {% endfor %}
+            </table>
+          </div>
+        </div>  
+        </div>
+    </section>
+      </body>     
+    <script src="{% static 'js/JavaScript.js' %}"></script>
+    <script>
+      function cantdelete() {
+        alert("Item can't be deleted");
+      }
+        function confirmDelete(id) {
+          if (confirm("Are you sure you want to delete?")) {
+            window.location.href="/SIPTrunks?delete=true&id="+id
+          } else {
+            // User clicked "Cancel", do nothing or handle the cancellation
+          }
+        }
+      </script>
+      <script>
+        var elements = document.querySelectorAll('.hrf');       
+        // Change the class of the last element to "active"
+          if (elements.length > 0) {
+          var lastElement = elements[elements.length - 6];
+          lastElement.classList.add('active');
+        }
+      </script>
+</html>
+{% endblock %}

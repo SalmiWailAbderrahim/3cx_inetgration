@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/log.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="logo">
+        <h2><span>Oxxo</span>Phone</h2>
+    </div>
+
+<div class="main-container">
+    <div class="form-container">
+    <br><br><br>
+    <br><br><br>
+    {% load crispy_forms_tags %}
+    {% block content %}
+    <div class="form-body">
+        <h1>Login</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Log In">
+        </form>
+    </div>
+
+    <div class="form-footer">
+        <div>
+            <span>Do you have an account?</span><a href="{% url 'register' %}"> Sign Up</a>
+        </div>
+    </div>
+
+</div>
+</div>
+    {% endblock content %}
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block sidebar %}
+   
+        <div class="container">
+            <div class="panel" >Inbound Rules</div>
+        <div class="main--container"> 
+             
+            <div class="table">
+            <div class="panel" ><h2>Inbound Rules</h2></div>
+            <input type="text" id="searchBar" placeholder="Search...">
+            <table id="myTable">
+              <tr>
+                
+                <th>Type</th>
+                <th>Name</th>
+                <th>Trunk</th>
+                <th>DID/DDI Number</th>
+                <th>In Office</th>
+                <th>Out Of Office</th>
+  
+
+                <th></th>
+              </tr>
+            {% for i in data.list %}
+              <tr>
+                
+                
+                <td>{% if i.Type %}{{i.Type}} {% else %} -- {%endif%}</td>
+                <td>{{i.Name}}</td>
+                
+                <td>{% if i.Trunk %}{{i.Trunk}} {% else %} -- {%endif%}</td>
+                <td>{% if i.DID %}{{i.DID}} {% else %} -- {%endif%}</td>
+                <td>{% if i.InOfficeRouting %}{{i.InOfficeRouting}} {% else %} -- {%endif%}</td>
+                <td>{% if i.OutOfOfficeRouting %}{{i.OutOfOfficeRouting}} {% else %} -- {%endif%}</td>
+                <td>
+                  <a href="#" onclick="confirmDelete({{i.Id}})">
+                  <span class="icon"><i class="ri-close-circle-line"></i></span>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </table>
+          </div>
+        </div>  
+        </div>
+    </section>
+      </body>     
+    <script src="{% static 'js/JavaScript.js' %}"></script>
+    <script>
+        function confirmDelete(id) {
+          if (confirm("Are you sure you want to delete?")) {
+            window.location.href="/InboundRules?delete=true&id="+id
+          } else {
+            // User clicked "Cancel", do nothing or handle the cancellation
+          }
+        }
+      </script>
+      <script>
+        var elements = document.querySelectorAll('.hrf');       
+        // Change the class of the last element to "active"
+          if (elements.length > 0) {
+          var lastElement = elements[elements.length - 5];
+          lastElement.classList.add('active');
+        }
+      </script>
+</html>
+
+{% endblock %}
