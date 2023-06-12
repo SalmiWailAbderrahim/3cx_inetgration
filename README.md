@@ -1,7 +1,7 @@
 # 3CX-integaration
  a web site that allows you to oversee your 3CX account
  
-1 ___________________________________________________________
+1 _______________________________________________________________________________________________________________________________
 install python
 install django
 create new project and new app
