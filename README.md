@@ -24,4 +24,4 @@ in your project replace settings.py and urls.py
 
 then execute python manage.py runserver 
 
-![Dashboard](screenshots/Screenshot2023-06-15051136.png)
+![Dashboard](screenshots/Screenshot%202023-06-15%20051136.png)
