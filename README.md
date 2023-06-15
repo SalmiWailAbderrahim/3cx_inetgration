@@ -23,3 +23,5 @@ in your project replace settings.py and urls.py
 3 ________________________________________________
 
 then execute python manage.py runserver 
+
+![Dashboard](screenshots/Screenshot 2023-06-15 051136.png)
