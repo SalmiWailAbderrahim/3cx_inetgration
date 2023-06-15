@@ -27,4 +27,5 @@ then execute python manage.py runserver
 
 ![DashboardOxxoPhone](screenshots/Screenshot%202023-06-15%20051149.png)
 ![Dashboard3CX](screenshots/Screenshot%202023-06-15%20051136.png)
+![Callqueues](screenshots/Screenshot%202023-06-15%20052243.png)
 ![Callqueues](screenshots/callqueues.png)
