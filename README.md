@@ -25,5 +25,6 @@ in your project replace settings.py and urls.py
 then execute python manage.py runserver 
 
 
-![Dashboard](screenshots/Screenshot%202023-06-15%20051149.png)
-![Dashboard](screenshots/Screenshot%202023-06-15%20051136.png)
+![DashboardOxxoPhone](screenshots/Screenshot%202023-06-15%20051149.png)
+![Dashboard3CX](screenshots/Screenshot%202023-06-15%20051136.png)
+![Callqueues](screenshots/callqueues.png)
