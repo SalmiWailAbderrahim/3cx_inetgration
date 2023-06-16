@@ -20,6 +20,8 @@ then python manage.py migrate
 
 in your project replace settings.py and urls.py
 
+in views.py replace URL and USERNAME and PASSWORD by your 3cx account infos!.
+
 3 ________________________________________________
 
 then execute python manage.py runserver 
